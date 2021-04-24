@@ -1,0 +1,18 @@
+version: 1.1
+kind: operation
+name: rstudio-build
+params:
+  destination:
+    connection: docker-connection
+    value: polyaxon/polyaxon-rstudio
+  context:
+    value: "{{ globals.artifacts_path }}/rocker-versioned/rstudio/
+runPatch:
+   init:
+   - git:
+       url: "https://github.com/polyaxon/rocker-versioned"
+  container:
+    env:
+    - name: ADD
+      value: shiny
+hubRef: kaniko

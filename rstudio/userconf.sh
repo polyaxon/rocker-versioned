@@ -7,6 +7,7 @@ USERID=${USERID:=1000}
 GROUPID=${GROUPID:=1000}
 ROOT=${ROOT:=FALSE}
 UMASK=${UMASK:=022}
+DISABLE_AUTH=${DISABLE_AUTH:="true"}
 
 ## Make sure RStudio inherits the full path
 echo "PATH=${PATH}" >> /usr/local/lib/R/etc/Renviron
@@ -49,6 +50,19 @@ if [ "$USERID" -lt 1000 ]
       echo "setting minumum authorised user to 499"
       echo auth-minimum-user-id=499 >> /etc/rstudio/rserver.conf
     fi
+fi
+
+if [ -n "$WWW_ROOT_PATH" ]
+  then
+    echo "www-root-path=${WWW_ROOT_PATH}" >> /etc/rstudio/rserver.conf
+    echo "www-frame-origin=any" >> /etc/rstudio/rserver.conf
+    echo "www-same-site=none" >> /etc/rstudio/rserver.conf
+fi
+
+if [ -n "$WORKING_DIR" ]
+  then
+    echo "session-default-working-dir=${WORKING_DIR}" >> /etc/rstudio/rsession.conf
+    echo "session-default-new-project-dir=${WORKING_DIR}" >> /etc/rstudio/rsession.conf
 fi
 
 if [ "$USERID" -ne 1000 ]
@@ -101,3 +115,18 @@ fi
 ## add these to the global environment so they are avialable to the RStudio user
 echo "HTTR_LOCALHOST=$HTTR_LOCALHOST" >> /etc/R/Renviron.site
 echo "HTTR_PORT=$HTTR_PORT" >> /etc/R/Renviron.site
+
+if [ -n "$R_ADD_RSTHEME" ]
+  then
+    echo "R_ADD_RSTHEME=$R_ADD_RSTHEME" >> /usr/local/lib/R/etc/Renviron
+fi
+
+if [ -n "$R_ADD_TMTHEME" ]
+  then
+    echo "R_ADD_TMTHEME=$R_ADD_TMTHEME" >> /usr/local/lib/R/etc/Renviron
+fi
+
+if [ -n "$R_APPLY_THEME" ]
+  then
+    echo "R_APPLY_THEME=$R_APPLY_THEME" >> /usr/local/lib/R/etc/Renviron
+fi
